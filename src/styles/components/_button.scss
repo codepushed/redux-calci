@@ -1,0 +1,33 @@
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
+.calculator-button {
+  @include button-base;
+  
+  &.number {
+    background-color: $color-tertiary;
+    color: $color-text-dark;
+  }
+  
+  &.operator {
+    background-color: $color-primary;
+    color: $color-text-light;
+  }
+  
+  &.function {
+    background-color: $color-secondary;
+    color: $color-text-dark;
+  }
+  
+  &.wide {
+    width: calc(#{$button-size} * 2 + #{$spacing-medium} * 2);
+    border-radius: 30px;
+    grid-column: span 2;
+    justify-content: flex-start;
+    padding-left: 24px;
+    
+    @include respond-to(small) {
+      width: calc(#{$button-size-small} * 2 + #{$spacing-small} * 2);
+    }
+  }
+}

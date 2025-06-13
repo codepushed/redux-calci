@@ -1,0 +1,13 @@
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
+.calculator-keypad {
+  @include flex-column;
+  background-color: $color-calculator-bg;
+  padding: $spacing-medium;
+  border-radius: 0 0 $border-radius-small $border-radius-small;
+  
+  .keypad-row {
+    @include flex-between;
+  }
+}
