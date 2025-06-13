@@ -1,0 +1,40 @@
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
+.calculator-display {
+  @include flex-column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+  min-height: $display-min-height;
+  background-color: $color-calculator-bg;
+  color: $color-text-light;
+  padding: $spacing-large;
+  box-sizing: border-box;
+  border-radius: $border-radius-small $border-radius-small 0 0;
+  overflow: hidden;
+  word-break: break-all;
+  
+  .expression {
+    font-size: $font-size-small;
+    color: rgba($color-text-light, 0.7);
+    margin-bottom: $spacing-medium;
+    min-height: $font-size-small;
+  }
+  
+  .value {
+    font-size: $font-size-large;
+    font-weight: 300;
+    text-align: right;
+    width: 100%;
+  }
+  
+  @include respond-to(small) {
+    min-height: $display-min-height-small;
+    padding: $spacing-medium;
+    
+    .value {
+      font-size: 2rem;
+    }
+  }
+}

@@ -1,0 +1,67 @@
+// Flexbox mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+// Media query mixins
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == small {
+    @media (max-width: $breakpoint-small) {
+      @content;
+    }
+  } @else if $breakpoint == medium {
+    @media (max-width: $breakpoint-medium) {
+      @content;
+    }
+  }
+}
+
+// Button styles
+@mixin button-base {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-medium;
+  font-weight: 400;
+  border: none;
+  border-radius: $border-radius-button;
+  width: $button-size;
+  height: $button-size;
+  margin: $spacing-medium;
+  cursor: pointer;
+  transition: filter 0.1s;
+  user-select: none;
+  
+  &:focus {
+    outline: 2px solid $color-focus;
+    outline-offset: 2px;
+  }
+  
+  &:active {
+    filter: brightness(80%);
+  }
+  
+  @include respond-to(small) {
+    width: $button-size-small;
+    height: $button-size-small;
+    font-size: $font-size-small;
+    margin: $spacing-small;
+  }
+}
