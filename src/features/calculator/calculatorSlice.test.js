@@ -5,7 +5,8 @@ import calculatorReducer, {
   calculate,
   clear,
   toggleSign,
-  percentage
+  percentage,
+  selectError
 } from './calculatorSlice';
 
 describe('calculator reducer', () => {
@@ -16,6 +17,7 @@ describe('calculator reducer', () => {
     shouldResetDisplay: false,
     expression: null,
     isResult: false,
+    error: null,
   };
 
   it('should handle initial state', () => {
@@ -131,5 +133,47 @@ describe('calculator reducer', () => {
     
     expect(state.currentValue).toEqual('16');
     expect(state.expression).toEqual('8 × 2 =');
+  });
+  
+  it('should handle leading zeros correctly', () => {
+    // First digit after 0 should replace the 0
+    let state = calculatorReducer(initialState, appendDigit('0'));
+    expect(state.currentValue).toEqual('0');
+    
+    state = calculatorReducer(state, appendDigit('0'));
+    expect(state.currentValue).toEqual('0');
+    
+    state = calculatorReducer(state, appendDigit('5'));
+    expect(state.currentValue).toEqual('5');
+    
+    // After non-zero digit, zeros should be appended normally
+    state = calculatorReducer(state, appendDigit('0'));
+    expect(state.currentValue).toEqual('50');
+  });
+  
+  it('should handle division by zero with error message', () => {
+    let state = calculatorReducer(initialState, appendDigit('5'));
+    state = calculatorReducer(state, setOperation('÷'));
+    state = calculatorReducer(state, appendDigit('0'));
+    state = calculatorReducer(state, calculate());
+    
+    expect(state.error).toEqual('Cannot divide by 0');
+    expect(state.currentValue).toEqual('0');
+    expect(state.expression).toEqual('5 ÷ 0 =');
+  });
+  
+  it('should clear error state when performing new operations', () => {
+    // First create an error state
+    let state = calculatorReducer(initialState, appendDigit('5'));
+    state = calculatorReducer(state, setOperation('÷'));
+    state = calculatorReducer(state, appendDigit('0'));
+    state = calculatorReducer(state, calculate());
+    
+    expect(state.error).toEqual('Cannot divide by 0');
+    
+    // Now perform a new operation
+    state = calculatorReducer(state, appendDigit('7'));
+    expect(state.error).toBeNull();
+    expect(state.currentValue).toEqual('7');
   });
 });
