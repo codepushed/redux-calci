@@ -1,14 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 /**
- * Initial state for the calculator
  * @typedef {Object} CalculatorState
- * @property {string} currentValue - Current value displayed (always a string for display purposes)
- * @property {string|null} previousValue - Previous value stored for operations
- * @property {string|null} operation - Current operation being performed
- * @property {boolean} shouldResetDisplay - Whether to reset the display on next input
- * @property {string|null} expression - Current expression being calculated (for display)
- * @property {boolean} isResult - Whether the current value is the result of a calculation
+ * @property {string} currentValue 
+ * @property {string|null} previousValue 
+ * @property {string|null} operation 
+ * @property {boolean} shouldResetDisplay 
+ * @property {string|null} expression 
+ * @property {boolean} isResult 
  */
 const initialState = {
   currentValue: '0',
@@ -25,8 +24,8 @@ export const calculatorSlice = createSlice({
   initialState,
   reducers: {
     /**
-     * @param {CalculatorState} state - Current state
-     * @param {Object} action - Action with digit payload
+     * @param {CalculatorState} state 
+     * @param {Object} action 
      */
     appendDigit: (state, action) => {
       const digit = action.payload;
@@ -49,7 +48,7 @@ export const calculatorSlice = createSlice({
     },
     
     /**
-     * @param {CalculatorState} state - Current state
+     * @param {CalculatorState} state 
      */
     appendDecimal: (state) => {
       if (state.shouldResetDisplay) {
@@ -68,14 +67,14 @@ export const calculatorSlice = createSlice({
     },
     
     /**
-     * @param {CalculatorState} state - Current state
-     * @param {Object} action - Action with operation payload
+     * @param {CalculatorState} state 
+     * @param {Object} action 
      */
     setOperation: (state, action) => {
       const operation = action.payload;
       
       if (state.operation && state.previousValue) {
-        const result = calculateResult(
+        const result = performCalculation(
           parseFloat(state.previousValue),
           parseFloat(state.currentValue),
           state.operation
@@ -94,7 +93,7 @@ export const calculatorSlice = createSlice({
     },
     
     /**
-     * @param {CalculatorState} state - Current state
+     * @param {CalculatorState} state 
      */
     calculate: (state) => {
       if (!state.operation || !state.previousValue) {
@@ -116,7 +115,7 @@ export const calculatorSlice = createSlice({
     },
     
     /**
-     * @param {CalculatorState} state - Current state
+     * @param {CalculatorState} state 
      */
     clear: (state) => {
       state.currentValue = '0';
@@ -128,7 +127,7 @@ export const calculatorSlice = createSlice({
     },
     
     /**
-     * @param {CalculatorState} state - Current state
+     * @param {CalculatorState} state 
      */
     toggleSign: (state) => {
       if (state.currentValue === '0') {
@@ -143,7 +142,7 @@ export const calculatorSlice = createSlice({
     },
     
     /**
-     * @param {CalculatorState} state - Current state
+     * @param {CalculatorState} state 
      */
     percentage: (state) => {
       const value = parseFloat(state.currentValue);

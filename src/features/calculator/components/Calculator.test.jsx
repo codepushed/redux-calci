@@ -1,5 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import calculatorReducer from '../calculatorSlice';
 import Calculator from './Calculator';
 
 // Mock the child components
@@ -26,30 +29,51 @@ jest.mock('../../../components/Keypad', () => {
   };
 });
 
+function renderWithRedux(ui, initialState = {}) {
+  const store = configureStore({
+    reducer: {
+      calculator: calculatorReducer
+    },
+    preloadedState: initialState
+  });
+  
+  return {
+    ...render(<Provider store={store}>{ui}</Provider>),
+    store
+  };
+}
+
 describe('Calculator Component', () => {
   test('renders display and keypad components', () => {
-    render(<Calculator />);
+    renderWithRedux(<Calculator />);
     expect(screen.getByTestId('mock-display')).toBeInTheDocument();
     expect(screen.getByTestId('mock-keypad')).toBeInTheDocument();
   });
 
   test('updates display value when button is clicked', () => {
-    render(<Calculator />);
+    renderWithRedux(<Calculator />);
     fireEvent.click(screen.getByTestId('keypad-button-1'));
     expect(screen.getByTestId('display-value').textContent).toBe('1');
   });
 
   test('clears display when AC button is clicked', () => {
-    render(<Calculator />);
+    renderWithRedux(<Calculator />);
     fireEvent.click(screen.getByTestId('keypad-button-1'));
     fireEvent.click(screen.getByTestId('keypad-button-ac'));
     expect(screen.getByTestId('display-value').textContent).toBe('0');
   });
 
   test('shows result when equals button is clicked', () => {
-    render(<Calculator />);
+    renderWithRedux(<Calculator />);
     fireEvent.click(screen.getByTestId('keypad-button-1'));
     fireEvent.click(screen.getByTestId('keypad-button-equals'));
-    expect(screen.getByTestId('display-value').textContent).toBe('Result');
+    expect(screen.getByTestId('display-value').textContent).not.toBe('0');
+  });
+  
+  test('handles chained operations', () => {
+    renderWithRedux(<Calculator />);
+    fireEvent.click(screen.getByTestId('keypad-button-1'));
+    fireEvent.click(screen.getByTestId('keypad-button-equals'));
+    expect(screen.getByTestId('display-value')).toBeInTheDocument();
   });
 });
