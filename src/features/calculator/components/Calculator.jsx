@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Display from '../../../components/Display';
 import Keypad from '../../../components/Keypad';
@@ -11,13 +11,27 @@ import {
   toggleSign,
   percentage,
   selectCurrentValue,
-  selectExpression
+  selectExpression,
+  selectError
 } from '../calculatorSlice';
 
 const Calculator = () => {
   const dispatch = useDispatch();
   const currentValue = useSelector(selectCurrentValue);
   const expression = useSelector(selectExpression);
+  const error = useSelector(selectError);
+  const [showError, setShowError] = useState(false);
+  
+  // Show error message when error state changes
+  useEffect(() => {
+    if (error) {
+      setShowError(true);
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 3000); // Hide error after 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
   
   const handleButtonClick = useCallback((value) => {
     if (/^[0-9]$/.test(value)) {
@@ -94,6 +108,11 @@ const Calculator = () => {
   
   return (
     <div className="calculator" data-testid="calculator">
+      {showError && (
+        <div className="calculator-error" role="alert" aria-live="assertive">
+          {error}
+        </div>
+      )}
       <Display value={currentValue} expression={expression || ''} />
       <Keypad onButtonClick={handleButtonClick} />
     </div>

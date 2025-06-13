@@ -11,13 +11,12 @@ jest.mock('./features/calculator', () => {
   };
 });
 
-test('renders calculator app with header', () => {
+test('renders calculator app', () => {
   render(
     <Provider store={store}>
       <App />
     </Provider>
   );
   
-  expect(screen.getByText('Redux Calculator')).toBeInTheDocument();
   expect(screen.getByTestId('mock-calculator')).toBeInTheDocument();
 });

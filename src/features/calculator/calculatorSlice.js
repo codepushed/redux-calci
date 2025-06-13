@@ -8,6 +8,7 @@ import { createSlice } from '@reduxjs/toolkit';
  * @property {boolean} shouldResetDisplay 
  * @property {string|null} expression 
  * @property {boolean} isResult 
+ * @property {string|null} error
  */
 const initialState = {
   currentValue: '0',
@@ -16,6 +17,7 @@ const initialState = {
   shouldResetDisplay: false,
   expression: null,
   isResult: false,
+  error: null,
 };
 
 
@@ -30,6 +32,8 @@ export const calculatorSlice = createSlice({
     appendDigit: (state, action) => {
       const digit = action.payload;
       
+      // Clear any previous error
+      state.error = null;
     
       if (state.shouldResetDisplay) {
         state.currentValue = digit;
@@ -51,6 +55,9 @@ export const calculatorSlice = createSlice({
      * @param {CalculatorState} state 
      */
     appendDecimal: (state) => {
+      // Clear any previous error
+      state.error = null;
+      
       if (state.shouldResetDisplay) {
         state.currentValue = '0.';
         state.shouldResetDisplay = false;
@@ -107,7 +114,14 @@ export const calculatorSlice = createSlice({
       );
       
       state.expression = `${state.previousValue} ${state.operation} ${state.currentValue} =`;
-      state.currentValue = result.toString();
+      
+      if (result === 'Error') {
+        state.error = 'Cannot divide by 0';
+        state.currentValue = '0';
+      } else {
+        state.currentValue = result.toString();
+      }
+      
       state.previousValue = null;
       state.operation = null;
       state.shouldResetDisplay = true;
@@ -124,6 +138,7 @@ export const calculatorSlice = createSlice({
       state.shouldResetDisplay = false;
       state.expression = null;
       state.isResult = false;
+      state.error = null;
     },
     
     /**
@@ -185,4 +200,5 @@ export const {
 export const selectCurrentValue = (state) => state.calculator.currentValue;
 export const selectExpression = (state) => state.calculator.expression;
 export const selectIsResult = (state) => state.calculator.isResult;
+export const selectError = (state) => state.calculator.error;
 export default calculatorSlice.reducer;
