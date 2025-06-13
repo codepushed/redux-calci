@@ -1,37 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Display from '../../../components/Display';
 import Keypad from '../../../components/Keypad';
+import {
+  appendDigit,
+  appendDecimal,
+  setOperation,
+  calculate,
+  clear,
+  toggleSign,
+  percentage,
+  selectCurrentValue,
+  selectExpression
+} from '../calculatorSlice';
 
-/**
- * Main Calculator component that combines Display and Keypad
- */
 const Calculator = () => {
-  // This is a placeholder for Redux state management
-  // We'll implement the actual state management in the next task
-  const [displayValue, setDisplayValue] = React.useState('0');
-  const [expression, setExpression] = React.useState('');
+  const dispatch = useDispatch();
+  const currentValue = useSelector(selectCurrentValue);
+  const expression = useSelector(selectExpression);
   
-  const handleButtonClick = (value) => {
-    // This is a temporary implementation
-    // We'll replace this with Redux actions in the next task
-    if (value === 'AC') {
-      setDisplayValue('0');
-      setExpression('');
+  const handleButtonClick = useCallback((value) => {
+    if (/^[0-9]$/.test(value)) {
+      dispatch(appendDigit(value));
+    } else if (value === '.') {
+      dispatch(appendDecimal());
+    } else if (['+', '-', '×', '÷'].includes(value)) {
+      dispatch(setOperation(value));
     } else if (value === '=') {
-      setDisplayValue('Result');
-      setExpression(`${expression} =`);
-    } else {
-      setDisplayValue(value);
-      setExpression(prev => prev + value);
+      dispatch(calculate());
+    } else if (value === 'AC') {
+      dispatch(clear());
+    } else if (value === '+/-') {
+      dispatch(toggleSign());
+    } else if (value === '%') {
+      dispatch(percentage());
     }
-  };
+  }, [dispatch]);
   
-  // Keyboard event handling (will be improved in Task 6)
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = e.key;
       
-      // Map keyboard keys to calculator actions
       if (/[0-9]/.test(key)) {
         handleButtonClick(key);
       } else if (key === '+' || key === '-') {
@@ -46,6 +55,8 @@ const Calculator = () => {
         handleButtonClick('AC');
       } else if (key === '.') {
         handleButtonClick('.');
+      } else if (key === '%') {
+        handleButtonClick('%');
       }
     };
     
@@ -54,11 +65,11 @@ const Calculator = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [handleButtonClick]);
   
   return (
     <div className="calculator" data-testid="calculator">
-      <Display value={displayValue} expression={expression} />
+      <Display value={currentValue} expression={expression || ''} />
       <Keypad onButtonClick={handleButtonClick} />
     </div>
   );
