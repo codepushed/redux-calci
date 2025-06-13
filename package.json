@@ -1,7 +1,10 @@
 {
   "name": "redux-calci",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "iOS-style calculator built with React and Redux Toolkit",
+  "author": "codepushed",
+  "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
     "@testing-library/dom": "^10.4.0",
@@ -19,7 +22,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src/**/*.{js,jsx}",
+    "format": "prettier --write src/**/*.{js,jsx,scss}",
+    "serve": "serve -s build"
   },
   "eslintConfig": {
     "extends": [
