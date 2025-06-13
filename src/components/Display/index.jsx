@@ -8,13 +8,27 @@ import React from 'react';
  */
 const Display = ({ value, expression = '' }) => {
   return (
-    <div className="calculator-display" data-testid="calculator-display">
+    <div 
+      className="calculator-display" 
+      data-testid="calculator-display"
+      role="region"
+      aria-label="Calculator display"
+    >
       {expression && (
-        <div className="expression" aria-live="polite">
+        <div 
+          className="expression" 
+          aria-live="polite"
+          aria-label="Current expression"
+        >
           {expression}
         </div>
       )}
-      <output className="value" aria-live="polite">
+      <output 
+        className="value" 
+        aria-live="assertive"
+        aria-atomic="true"
+        aria-label="Calculator result"
+      >
         {value}
       </output>
     </div>

@@ -41,27 +41,52 @@ const Calculator = () => {
     const handleKeyDown = (e) => {
       const key = e.key;
       
+      // Map keyboard keys to calculator actions
       if (/[0-9]/.test(key)) {
+        // Numbers
         handleButtonClick(key);
       } else if (key === '+' || key === '-') {
+        // Basic operators
         handleButtonClick(key);
-      } else if (key === '*') {
+      } else if (key === '*' || key === 'x' || key === 'X') {
+        // Multiplication - support multiple key options
         handleButtonClick('×');
-      } else if (key === '/') {
+      } else if (key === '/' || key === '÷') {
+        // Division - support multiple key options
         handleButtonClick('÷');
-      } else if (key === 'Enter') {
+      } else if (key === 'Enter' || key === '=') {
+        // Calculate result
+        e.preventDefault(); // Prevent form submission if within a form
         handleButtonClick('=');
-      } else if (key === 'Escape') {
+      } else if (key === 'Escape' || key === 'c' || key === 'C') {
+        // Clear - support multiple key options
         handleButtonClick('AC');
       } else if (key === '.') {
+        // Decimal point
         handleButtonClick('.');
       } else if (key === '%') {
+        // Percentage
         handleButtonClick('%');
+      } else if (key === 'Backspace' || key === 'Delete') {
+        // Handle backspace/delete as clear
+        handleButtonClick('AC');
+      } else if (key === '_' || key === 'n' || key === 'N') {
+        // Toggle sign (negative/positive)
+        handleButtonClick('+/-');
       }
     };
     
+    // Add keyboard event listener
     window.addEventListener('keydown', handleKeyDown);
     
+    // Focus the calculator container for better keyboard accessibility
+    const calculatorElement = document.querySelector('.calculator');
+    if (calculatorElement) {
+      calculatorElement.setAttribute('tabIndex', '0');
+      calculatorElement.focus();
+    }
+    
+    // Cleanup function
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
